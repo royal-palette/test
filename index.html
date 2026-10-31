@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>متابع العبادات الرمضاني | Royal Palette</title>
+<link rel="icon" type="image/png" sizes="32x32" href="Favicon32.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1A0D21">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ramadan Tracker">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1A0D21;--s:#2A1534;--s2:#37203F;--ink:#F3E9D2;--mu:#B8A5BD;--g:#C5A059;--r:#D4A5A5;--ln:rgba(197,160,89,.25)}
+[data-t=light]{--bg:#DBCFBB;--s:#FBF7EE;--s2:#EFE6D4;--ink:#3E1F47;--mu:#7B6A82;--ln:rgba(62,31,71,.16)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font-family:Tajawal,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+button,select,input{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.app{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.rail{position:sticky;top:0;height:100vh;padding:24px 20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;background:var(--s) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%23C5A059' stroke-opacity='.13'%3E%3Crect x='15' y='15' width='30' height='30'/%3E%3Crect x='15' y='15' width='30' height='30' transform='rotate(45 30 30)'/%3E%3C/g%3E%3C/svg%3E");border-left:1px solid var(--ln)}
+.brand{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:Amiri,serif;font-size:1.5rem;font-weight:700;text-align:center}
+.brand img{height:96px;width:auto;max-width:190px;object-fit:contain}
+.dates{text-align:center;line-height:1.5;padding:8px 10px;border-radius:12px;background:var(--s2);border:1px solid var(--ln)}
+.dates b{display:block;color:var(--g);font-size:1.05rem}.dates span{color:var(--mu);font-size:.85rem}
+.wdb{padding:6px 12px;border-radius:99px;border:1px solid var(--ln);background:var(--s2);color:var(--mu)}.wdb.on{background:var(--g);border-color:var(--g);color:#2B0F33;font-weight:700}
+.hab+.hab{border-top:1px solid var(--ln);margin-top:12px;padding-top:12px}.btn.o.slip{background:var(--r);border-color:var(--r);color:#2B0F33}
+.iab{position:fixed;top:0;left:0;right:0;z-index:80;background:var(--g);color:#2B0F33;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;font-size:.9rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.iab span{flex:1 1 220px}.iab button{background:#2B0F33;color:#F3E9D2;border-radius:8px;padding:6px 12px;font-weight:700}
+.mine{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--ln)}
+.foot{margin-top:28px;padding-top:22px;border-top:1px solid var(--ln);display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;color:var(--mu)}
+.foot img{height:72px;width:auto;max-width:180px;object-fit:contain}
+.ig{display:inline-flex;align-items:center;gap:8px;color:var(--g);font-weight:700;text-decoration:none;padding:8px 14px;border:1px solid var(--g);border-radius:99px}
+.ig:hover{background:var(--g);color:#2B0F33}
+.moonbox{text-align:center;position:relative}
+.moonbox svg{width:150px;height:150px}
+#pc{font-size:1.9rem;font-weight:700;color:var(--g);line-height:1}
+.moonbox small{display:block;color:var(--mu)}
+.daybox{display:flex;flex-direction:column;gap:6px}
+.sel,.inp{background:var(--s2);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;width:100%}
+.lnk{color:var(--mu);font-size:.85rem;text-decoration:underline}
+.nav{display:flex;flex-direction:column;gap:6px;margin-top:auto}
+.nav button{display:flex;gap:10px;align-items:center;padding:12px 14px;border-radius:12px;color:var(--mu);font-weight:500}
+.nav button[aria-current=true]{background:var(--g);color:#2B0F33;font-weight:700}
+main{padding:32px clamp(16px,4vw,48px);max-width:900px;width:100%}
+h1{font-family:Amiri,serif;font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 4px}
+.sub{color:var(--mu);margin:0 0 22px}
+.card{background:var(--s);border:1px solid var(--ln);border-radius:20px;padding:20px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.card h2 small{margin-inline-start:auto;color:var(--mu);font-weight:400}
+.tasks{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.task{display:flex;align-items:center;border-radius:14px;background:var(--s2);min-height:52px}
+.tk{flex:1;display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:start}
+.ck{width:26px;height:26px;border-radius:50%;border:2px solid var(--g);flex:none;display:grid;place-items:center;transition:.15s}
+.task.on .ck{background:var(--g)}.task.on .ck:after{content:"✓";color:#2B0F33;font-weight:700;font-size:.9rem}
+.task.on .tk span{text-decoration:line-through;color:var(--mu)}
+.del{padding:0 14px;color:var(--r);align-self:stretch}
+.chip{display:inline-flex;gap:6px;padding:6px 14px;border-radius:99px;background:var(--s2);border:1px solid var(--ln);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{background:var(--g);color:#2B0F33;border-radius:12px;padding:10px 18px;font-weight:700}
+.btn.o{background:none;border:1px solid var(--g);color:var(--g)}
+.times{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center;font-size:.9rem;margin-top:10px}
+.times div{background:var(--s2);border-radius:10px;padding:6px 2px}
+#next{font-size:1.25rem;font-weight:700;color:var(--g)}
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.part{padding:10px 4px;border-radius:12px;background:var(--s2);border:1px solid var(--ln);text-align:center;font-weight:500}
+.part.on{background:var(--g);color:#2B0F33;font-weight:700}
+.today{background:var(--s2);border-radius:14px;padding:14px;text-align:center;font-size:1.15rem;font-weight:700;margin-bottom:14px}
+.today small{display:block;color:var(--mu);font-weight:400;font-size:.85rem}
+#chart{display:flex;align-items:flex-end;gap:3px;height:120px}
+.bar{flex:1;background:var(--s2);border-radius:4px 4px 0 0;min-height:4px}.bar.on{background:var(--g)}.bar.cur{outline:2px solid var(--ink)}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{padding:6px 14px;border-radius:99px;background:var(--g);color:#2B0F33;font-size:.9rem;font-weight:700}.badge.off{background:var(--s2);color:var(--mu);font-weight:400}
+.ov{position:fixed;inset:0;background:rgba(10,4,14,.7);display:grid;place-items:center;z-index:50;padding:16px}
+.modal{background:var(--s);border:1px solid var(--g);border-radius:24px;padding:28px;max-width:380px;width:100%;text-align:center;max-height:92vh;overflow:auto}
+.dua{font-family:Amiri,serif;font-size:1.5rem;line-height:1.9;margin:12px 0 20px}
+.nav svg{width:26px;height:26px;flex:none;color:var(--g)}.nav button[aria-current=true] svg{color:#2B0F33}
+.fs{display:flex;align-items:center;justify-content:center;gap:12px}.fs span{color:var(--mu);font-size:.85rem}.fs button{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--g);color:var(--g);font-size:1.4rem;font-weight:700;line-height:1;display:grid;place-items:center}.fs button:hover:not(:disabled){background:var(--g);color:#2B0F33}.fs button:disabled{opacity:.35;cursor:default}
+@media(max-width:820px){
+ .app{display:block}
+ .rail{position:static;height:auto;padding:16px 16px 12px;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center;border:0;border-bottom:1px solid var(--ln)}
+ .brand{grid-column:1/-1;font-size:1.25rem}
+ .brand img{height:70px}
+ .moonbox svg{width:96px;height:96px}#pc{font-size:1.3rem}
+ .nav{position:fixed;bottom:0;left:0;right:0;z-index:20;flex-direction:row;background:var(--s);border-top:1px solid var(--ln);padding:6px 8px calc(6px + env(safe-area-inset-bottom));gap:2px;margin:0}
+ .nav button{flex:1;flex-direction:column;gap:0;padding:6px 2px;font-size:.78rem}
+ main{padding:20px 16px 96px}
+ .tasks{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="iab" class="iab" hidden><span>⚠️ إنتي فاتحة التطبيق من جوه إنستجرام، وتقدمك ممكن مايتحفظش هنا. افتحيه في كروم أو سفاري: اضغطي ⋯ ثم «فتح في المتصفح».</span><button id="iabCopy">نسخ الرابط</button><button id="iabX">إغلاق</button></div>
+
+<div id="reg" class="ov"><div class="modal">
+  <h1>أهلاً بيكِ 🌙</h1><p class="sub">سجّلي اسمك عشان نبدأ</p>
+  <form id="regForm" style="display:grid;gap:10px">
+    <input class="inp" id="uName" placeholder="الاسم" required autocomplete="name">
+    <input class="inp" id="uMail" type="email" placeholder="الايميل (اختياري)" autocomplete="email">
+    <p class="sub" style="font-size:.8rem;margin:0">بنبعت الاسم ونسبة إنجاز كل يوم بس (من غير أي تفاصيل عن عباداتك)، والباقي بيتحفظ على جهازك. الإيميل اختياري.</p>
+    <div id="gChips" class="row" style="justify-content:center;gap:6px"><span class="sub" style="width:100%;margin:0;font-size:.85rem">نخاطبك إزاي؟</span>
+      <button type="button" class="wdb" data-g="f" onclick="pickG('f')">بصيغة المؤنث 🌸</button><button type="button" class="wdb" data-g="m" onclick="pickG('m')">بصيغة المذكر</button></div>
+    <button class="btn">سجل وابدأ</button>
+  </form>
+  <label class="lnk" style="display:block;margin-top:14px;cursor:pointer">عندي نسخة محفوظة؟ استرجعي بياناتك<input type="file" id="imp2" accept=".json" hidden></label>
+  <div class="fs" role="group" aria-label="حجم الخط" style="margin-top:12px"><button type="button" data-fs="-1" aria-label="تصغير الخط">−</button><span>حجم الخط</span><button type="button" data-fs="1" aria-label="تكبير الخط">+</button></div>
+</div></div>
+
+<div id="dua" class="ov" hidden><div class="modal">
+  <div>🌙 دعاء اليوم</div><p class="dua" id="duaT"></p>
+  <button class="btn" onclick="$('dua').hidden=true">آمين 🤍</button>
+</div></div>
+<div id="gq" class="ov" hidden><div class="modal">
+  <h1 style="font-size:1.5rem">نخاطبك إزاي؟</h1><p class="sub">عشان الرسائل تبقى مناسبة ليك</p>
+  <div class="row" style="justify-content:center"><button class="btn" onclick="chooseG('f')">بصيغة المؤنث 🌸</button><button class="btn o" onclick="chooseG('m')">بصيغة المذكر</button></div>
+</div></div>
+<div id="ach" class="ov" hidden style="z-index:90"><div class="modal" role="dialog" aria-live="polite">
+  <div id="achI" style="font-size:3.4rem;line-height:1.2">🏅</div><div class="sub" style="margin:0">🎉 إنجاز جديد</div>
+  <h1 id="achT" style="font-size:1.6rem;margin:6px 0"></h1><p id="achD" class="sub"></p>
+  <div class="row" style="justify-content:center"><button id="achS" class="btn">📤 شاركي</button><button id="achC" class="btn o">تمام 🤍</button></div>
+</div><canvas id="cf" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none"></canvas></div>
+
+<div class="app" id="app" hidden>
+<aside class="rail">
+  <div class="brand"><img src="logo.png" alt="Royal Palette" onerror="this.style.display='none'"><span>رحلة رمضان</span></div>
+  <div class="moonbox">
+    <svg viewBox="0 0 140 140" aria-hidden="true"><defs><clipPath id="mc"><circle cx="70" cy="70" r="60"/></clipPath></defs>
+      <circle cx="70" cy="70" r="60" fill="var(--s2)" stroke="var(--g)" stroke-opacity=".5"/>
+      <g clip-path="url(#mc)"><circle cx="70" cy="70" r="60" fill="var(--g)"/><circle id="shade" cx="70" cy="70" r="60" fill="var(--s2)"/></g></svg>
+    <div id="pc">٠%</div><small>إنجاز اليوم</small>
+  </div>
+  <div class="daybox"><div class="dates" aria-label="تاريخ اليوم"><b id="hij"></b><span id="greg"></span><button class="lnk" style="font-size:.75rem" onclick="view('more');$('hoff').focus()">التاريخ الهجري مش مظبوط؟</button></div><select id="day" class="sel" aria-label="اختر اليوم"></select><button id="todayBtn" class="lnk">ارجعي لليوم الحالي</button><div class="fs" role="group" aria-label="حجم الخط"><button type="button" data-fs="-1" aria-label="تصغير الخط">−</button><span>حجم الخط</span><button type="button" data-fs="1" aria-label="تكبير الخط">+</button></div></div>
+  <nav class="nav">
+    <button data-v="today"><svg class="em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>اليوم</button>
+    <button data-v="quran"><svg class="em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg>القرآن</button>
+    <button data-v="stats"><svg class="em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6"/></svg>إنجازي</button>
+    <button data-v="more"><svg class="em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>المزيد</button>
+  </nav>
+</aside>
+
+<main>
+<section class="view" id="v-today">
+  <h1>مُتابع العبادات</h1><p class="sub" id="quote"></p>
+  <div class="card" id="cd" hidden style="text-align:center;border-color:var(--g)">
+    <div id="cdN" style="font-size:1.7rem;font-weight:700;color:var(--g)"></div>
+    <div id="cdD" class="sub" style="margin:4px 0 0"></div>
+    <p class="sub" style="font-size:.8rem;margin:8px 0 0">لحد ما رمضان يبدأ، التعليم تجريبي وهيتمسح مع أول يوم 🌙</p>
+  </div>
+  <div class="card" id="bk" hidden>
+    <b>💾 نسخة احتياطية</b>
+    <p class="sub" style="margin:6px 0 12px;font-size:.9rem">عدّى أسبوع من آخر نسخة. صدّري نسخة عشان تقدري تكمّلي لو غيّرتي الجهاز أو مسحتي المتصفح.</p>
+    <div class="row"><button id="bkNow" class="btn">⬇ صدّري دلوقتي</button><button id="bkLater" class="btn o">فكّريني بعد يومين</button></div>
+  </div>
+  <div class="card">
+    <div id="next">...</div>
+    <div class="times" id="times"></div>
+  </div>
+  <div class="row" style="margin-bottom:16px"><span class="chip">🔥 <span id="streakN">٠</span> أيام متتالية</span><span class="chip" id="dayChip"></span><button class="chip" id="exBtn" hidden></button></div>
+  <div class="card" id="lt" hidden style="border-color:var(--g)"><b>💫 العشر الأواخر</b><p class="sub" id="ltT" style="margin:6px 0 0"></p></div>
+  <div class="card" id="exB" hidden style="border-color:var(--r)"><b>🌸 أيام العذر</b><p class="sub" style="margin:6px 0 0">مهام الصلاة متخفية النهارده، والأذكار والاستغفار والدعاء فاضلين. اضغطي «انتهت» أول يوم تكملي فيه عبادتك عادي. تقبّل الله منك 🤍</p></div>
+  <div id="tasks"></div>
+  <div id="habits"></div>
+  <div class="card"><h2>➕ أضيفي مهمة خاصة بيكِ</h2>
+    <div class="row" id="typ" style="margin-bottom:10px;gap:6px"></div>
+    <div class="row"><input id="newT" class="inp" style="flex:1;min-width:180px" maxlength="40" placeholder="مثلاً: سورة الكهف"><button id="addT" class="btn">أضف</button></div>
+    <div id="wdBox"><p class="sub" style="font-size:.85rem;margin:12px 0 6px">تظهر في أنهي أيام؟</p>
+    <div class="row" id="wd" style="gap:6px"></div></div>
+    <p id="habNote" class="sub" style="font-size:.85rem;margin:12px 0 0" hidden>🔒 العادات بتفضل على جهازك بس، ومش بتتبعت لأي حد ولا بتظهر في كارت المشاركة.</p>
+    <div id="myList" style="margin-top:14px"></div></div>
+</section>
+
+<section class="view" id="v-quran" hidden>
+  <h1>القرآن</h1><p class="sub">اختاري خطتك وتابعي أجزاءك</p>
+  <div class="card"><div class="row" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">خطة الختمة</h2>
+    <label>عدد الختمات <select id="kSel" class="sel" style="width:auto"><option value="1">١</option><option value="2">٢</option><option value="3">٣</option></select></label></div>
+    <div class="today" id="kToday"></div>
+    <h2>الأجزاء <small>التقدم: <b id="qp">٠%</b></small></h2><div class="parts" id="parts"></div></div>
+</section>
+
+<section class="view" id="v-stats" hidden>
+  <h1>إنجازي</h1><p class="sub">اليوم بيتحسب لما تكملي ٨٠% من مهامه</p>
+  <div class="card"><h2>نسبة الإنجاز في أيام الشهر</h2><div id="chart"></div>
+    <div class="row" style="justify-content:space-between;color:var(--mu);font-size:.8rem"><span>١</span><span>١٥</span><span>٣٠</span></div></div>
+  <div class="card"><h2>الشارات</h2><div class="badges" id="badges"></div><div id="bw" style="margin-top:14px"></div></div>
+  <button id="share" class="btn">📤 شاركي إنجازك (ستوري)</button>
+</section>
+
+<section class="view" id="v-more" hidden>
+  <h1>المزيد</h1><p class="sub">إعدادات وحفظ البيانات</p>
+  <div class="card"><h2>🗣️ طريقة المخاطبة</h2><select id="gSel" class="sel"><option value="f">بصيغة المؤنث</option><option value="m">بصيغة المذكر</option></select></div>
+  <div class="card"><h2>🔠 حجم الخط</h2><select id="fsSel" class="sel"><option value="0">عادي</option><option value="1">كبير</option><option value="2">أكبر</option><option value="3">الأكبر</option></select></div>
+  <div class="card" id="exCard" hidden><h2>🌸 أيام العذر</h2>
+    <p class="sub" style="font-size:.9rem;margin:0 0 10px">الزر 🌸 في صفحة «اليوم» (جنب عدّاد الأيام المتتالية) بيبدأ ويخلّص أيام العذر. في الأيام دي بتتخفي مهام الصلاة (الفرائض والسنن والتراويح والوتر والقيام) وتفضل الأذكار والاستغفار والدعاء. النسبة والاستمرارية متتأثرش. البيانات دي على جهازك بس، ومش بتتبعت لأي حد ولا بتظهر في المشاركة.</p>
+    <div class="row"><button id="exQ" class="btn o">إخفاء الورد القرآني كمان</button></div>
+    <div id="exList" style="margin-top:12px"></div></div>
+  <div class="card"><h2>🎉 الإنجازات</h2><p class="sub" style="font-size:.9rem;margin:0 0 10px">الإنجازات بتظهر أثناء رمضان أول ما تتحقق. الزر ده مجرد تجربة لشكل الاحتفال.</p><button id="achDemo" class="btn o">🎉 تجربة الاحتفال</button></div>
+  <div class="card"><h2>📲 ثبّتيه على موبايلك</h2><p class="sub" style="font-size:.9rem;margin:0">أندرويد (كروم): اضغطي ⋮ ثم «تثبيت التطبيق».<br>آيفون (سفاري): اضغطي زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».<br>لازم تفتحيه من المتصفح مش من جوه إنستجرام.</p></div>
+  <div class="card"><h2>📅 ضبط التاريخ الهجري</h2>
+    <p class="sub" style="font-size:.9rem">مصر بتبدأ الشهور برؤية الهلال (دار الإفتاء) ومفيش تقويم جاهز ليها في المتصفح، فاضبطي الفرق مرة واحدة وكل الأيام هتتحسب عليه.</p>
+    <select id="hoff" class="sel"><option value="0">زي التقويم السعودي (أم القرى)</option><option value="-1">يوم أقل من السعودي</option><option value="-2">يومين أقل من السعودي</option><option value="1">يوم أكتر من السعودي</option></select>
+    <p id="hprev" class="sub" style="margin:10px 0 0;font-weight:700"></p></div>
+  <div class="card"><h2>المدينة (للمواقيت)</h2><select id="city" class="sel"></select></div>
+  <div class="card"><h2>المظهر</h2><button id="theme" class="btn o">🌗 بدّلي بين الليلي والفاتح</button></div>
+  <div class="card"><h2>نسخة احتياطية</h2>
+    <p class="sub" style="font-size:.9rem">التقدم محفوظ على جهازك فقط. النسخة بتشمل اسمك وتقدمك وإعداداتك كلها، فتقدري تكمّلي على أي جهاز بنفس الاستمرارية.</p>
+    <div class="row"><button id="exp" class="btn">⬇ تصدير</button><label class="btn o">⬆ استيراد<input type="file" id="imp" accept=".json" hidden></label></div></div>
+  <div class="card"><h2>🗑️ مسح كل بياناتي</h2><p class="sub" style="font-size:.9rem;margin:0 0 10px">بيمسح الاسم والتقدم والإعدادات من الجهاز ده ويرجّعك لشاشة التسجيل. صدّري نسخة قبلها لو محتاجاها.</p><button id="wipe" class="btn o" style="color:var(--r);border-color:var(--r)">مسح كل بياناتي</button></div>
+  <p class="sub" style="text-align:center">اللهم تقبّل هذا العمل البسيط واجعله خالصًا لوجهك 🤍</p>
+</section>
+<footer class="foot">
+  <img src="logo.png" alt="Royal Palette" onerror="this.style.display='none'">
+  <a class="ig" href="https://www.instagram.com/royalpalette.eg?igsh=MXV2aWU0dHdlNW95cw%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="حساب Royal Palette على إنستجرام">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>
+    <span dir="ltr">@royalpalette.eg</span></a>
+</footer>
+</main>
+</div>
+
+<script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5USfOAa71E5H1jDWdm3yvwyvETtM-XP8iSCJMHGGs8QqSmkSwrDckTSwZtpOF08uF/exec";
+const $ = id => document.getElementById(id);
+const L = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
+const S = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ar = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+/* المخاطبة وحجم الخط */
+let gender = localStorage.getItem('ramadan_gender') === 'm' ? 'm' : 'f', regG = null;
+const GM = {"هتمسحي":"هتمسح","انسخي":"انسخ","وافتحيه":"وافتحه","أضيفي":"أضف","إنتي":"إنت","ابدئي":"ابدأ","اتأكدي":"اتأكد","اختاري":"اختر","ارجعي":"ارجع","استرجعي":"استرجع","اضغطي":"اضغط","افتحيه":"افتحه","امسحي":"امسح","بدّلي":"بدّل","بيكِ":"بيك","تحذفي":"تحذف","تفتحيه":"تفتحه","تقدري":"تقدر","تكملي":"تكمل","تكمّلي":"تكمل","ثبّتيه":"ثبّته","حدّثي":"حدّث","خلصتي":"خلصت","سجّلي":"سجّل","شاركي":"شارك","صامدة":"صامد","صدّري":"صدّر","علّمي":"علّم","غيّرتي":"غيّرت","فاتحة":"فاتح","فاحفظي":"فاحفظ","فاضبطي":"فاضبط","فتقدري":"فتقدر","فكّريني":"فكّرني","محتاجة":"محتاج","مسحتي":"مسحت","ملتزمة":"ملتزم","وتابعي":"وتابع"};
+const gm = s => gender === 'm' ? String(s).replace(/[\u0600-\u06FF]+/g, t => GM[t] || t) : s;
+function fix(n) {
+  if (n.nodeType === 3) { if (/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) return; const v = gm(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v }
+  else if (n.nodeType === 1 && !/^(SCRIPT|STYLE)$/.test(n.nodeName)) { const w = document.createTreeWalker(n, NodeFilter.SHOW_TEXT); let t; while (t = w.nextNode()) fix(t) }
+}
+new MutationObserver(ms => { if (gender !== 'm') return; for (const m of ms) { if (m.type === 'characterData') fix(m.target); else m.addedNodes.forEach(fix) } }).observe(document.body, {childList: true, subtree: true, characterData: true});
+const _al = window.alert, _cf = window.confirm, _pr = window.prompt;
+window.alert = s => _al(gm(s)); window.confirm = s => _cf(gm(s)); window.prompt = (s, d) => _pr(gm(s), d);
+function setGender(g) { localStorage.setItem('ramadan_gender', g); if (g === 'm' && gender !== 'm') { gender = 'm'; fix(document.body) } }
+window.pickG = g => { regG = g; document.querySelectorAll('#gChips .wdb').forEach(b => b.classList.toggle('on', b.dataset.g === g)) };
+window.chooseG = g => { setGender(g); $('gq').hidden = true };
+$('gSel').value = gender; $('gSel').onchange = e => { localStorage.setItem('ramadan_gender', e.target.value); location.reload() };
+fix(document.body);
+
+const FS = [100, 115, 130, 150]; let fs = Math.min(3, +localStorage.getItem('ramadan_fs') || 0);
+const applyFs = () => { document.documentElement.style.fontSize = FS[fs] + '%'; $('fsSel').value = fs; document.querySelectorAll('[data-fs]').forEach(b => b.disabled = +b.dataset.fs > 0 ? fs >= FS.length - 1 : fs <= 0) };
+const setFs = v => { fs = Math.max(0, Math.min(FS.length - 1, v)); localStorage.setItem('ramadan_fs', fs); applyFs() };
+document.querySelectorAll('[data-fs]').forEach(b => b.onclick = () => setFs(fs + +b.dataset.fs));
+$('fsSel').onchange = e => setFs(+e.target.value);
+applyFs();
+
+if (/Instagram|FBAN|FBAV|FB_IAB|TikTok/i.test(navigator.userAgent) && !sessionStorage.getItem('iabx')) $('iab').hidden = false;
+$('iabX').onclick = () => { $('iab').hidden = true; sessionStorage.setItem('iabx', 1) };
+$('iabCopy').onclick = async () => { try { await navigator.clipboard.writeText(location.href); $('iabCopy').innerText = 'اتنسخ ✓' } catch (e) { prompt('انسخي الرابط وافتحيه في كروم أو سفاري', location.href) } };
+
+
+const categories = [
+  {title:"الصلوات المفروضة", icon:"🕌", tasks:["الفجر","الظهر","العصر","المغرب","العشاء"]},
+  {title:"السنن الرواتب", icon:"✨", tasks:["سنة الفجر (2 قبل)","الضحى","سنة الظهر (4 قبل - 2 بعد)","سنة المغرب (2 بعد)","سنة العشاء (2 بعد)"]},
+  {title:"الأذكار والورد", icon:"📖", tasks:["أذكار الصباح","أذكار المساء","الورد القرآني","الاستغفار","الصلاة على النبي"]},
+  {title:"قيام الليل", icon:"🌙", tasks:["صلاة التراويح","صلاة الوتر"]}
+];
+const lastTen = {title:"العشر الأواخر", icon:"💫", tasks:["قيام الليل","اللهم إنك عفو تحب العفو فاعف عني","صدقة"]};
+const duas = ["اللهم أعنّي على ذكرك وشكرك وحسن عبادتك","اللهم تقبّل مني صيامي وقيامي","يا رب اجعل هذا اليوم مليئًا بالبركة والسكينة","اللهم اغفر لي ولوالدي وللمؤمنين","يا رب ارزقني الإخلاص في القول والعمل","اللهم اجعل القرآن ربيع قلبي ونور صدري","يا رب اجعلني من المقبولين في هذا الشهر","اللهم اكتب لي أجر كل طاعة ولو قصّرت","يا رب أصلح قلبي ونيتي","اللهم اجعلني من عبادك الصالحين","اللهم بلّغني رمضان وأعنّي فيه على الصيام والقيام وغضّ البصر وحفظ اللسان","اللهم طهّر قلبي من النفاق وعملي من الرياء","يا رب ارزقني لذة الطاعة وحلاوة القرب منك","اللهم اجعلني من أهل الذكر والشكر","يا رب أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين","اللهم ارزقني قلبًا خاشعًا ولسانًا ذاكرًا","يا رب اجعلني من عتقائك من النار","يا رب ارزقني حسن الخاتمة","اللهم اجعلني من الذين نظرت إليهم فرحمتهم","يا رب اكتب لي نصيبًا من كل خير تنزله في هذا الشهر","اللهم وسّع صدري وطمئن قلبي","يا رب اجعلني سببًا للخير أينما كنت","اللهم ارزقني بركة الوقت والعمل","يا رب استجب دعائي ولو بعد حين","اللهم اجعلني من أهل الجنة بلا حساب","يا رب لا تحرمني لذة مناجاتك","يا رب اجعلني من الصابرين الشاكرين","اللهم أصلح لي ديني ودنياي وآخرتي","يا رب تقبّل مني القليل وبارك لي فيه","اللهم لا تخرجني من رمضان إلا وقد غفرت لي ورضيت عني"];
+const quotes = ["رمضان فرصة للتغيير، ابدأ يومك بنية خالصة لله.","قليل دائم خير من كثير منقطع.","الصيام جُنّة، فاحفظي لسانك وقلبك.","لا تحقرن من المعروف شيئاً."];
+const CITIES = {"بورسعيد":"Port Said","القاهرة":"Cairo","الإسكندرية":"Alexandria","الجيزة":"Giza","المنصورة":"Mansoura","طنطا":"Tanta","أسيوط":"Asyut","الأقصر":"Luxor","أسوان":"Aswan"};
+
+// موسم جديد: امسحي تقدم السنة اللي فاتت (الاسم والإيميل بيفضلوا)
+if (localStorage.getItem('ramadan_season') !== '1448') {
+  ['ramadan_tracker', 'quranParts', 'ramadan_custom', 'ramadan_plan', 'duaDate', 'ramadan_hoff', 'ramadan_habits', 'ramadan_hablog', 'ramadan_first', 'ramadan_last', 'ramadan_backup', 'ramadan_snooze', 'ramadan_firstuse', 'ramadan_ach', 'ramadan_excuse'].forEach(k => localStorage.removeItem(k));
+  localStorage.setItem('ramadan_season', '1448');
+}
+let userData = L('ramadan_tracker', {}), quranData = L('quranParts', {}), custom = L('ramadan_custom', []);
+let plan = L('ramadan_plan', {k:1}), city = L('ramadan_city', 'Port Said'), currentDay = 1, timings = null;
+
+let hOff = L('ramadan_hoff', 0), rs = null;
+const WD = [[6,'السبت'],[0,'الأحد'],[1,'الاثنين'],[2,'الثلاثاء'],[3,'الأربعاء'],[4,'الخميس'],[5,'الجمعة']];
+function hp(date) {
+  const d = new Date(date); d.setDate(d.getDate() + hOff);
+  const p = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {day:'numeric', month:'numeric'}).formatToParts(d);
+  const g = t => +p.find(x => x.type === t).value;
+  return {d: g('day'), m: g('month')};
+}
+function autoDay() {
+  try { const h = hp(new Date()); if (h.m === 9) return Math.min(h.d, 30); } catch (e) {}
+  return 1;
+}
+function inRamadan() { try { return hp(new Date()).m === 9 } catch (e) { return true } }
+function ramadanStart() {
+  if (rs) return rs;
+  const t = new Date(); t.setHours(12, 0, 0, 0);
+  try { for (let i = -29; i <= 420; i++) { const x = new Date(t); x.setDate(x.getDate() + i); const h = hp(x); if (h.m === 9 && h.d === 1) { rs = x; return x } } } catch (e) {}
+  return t;
+}
+const dayDate = d => { const x = new Date(ramadanStart()); x.setDate(x.getDate() + d - 1); return x };
+const onDay = (x, d) => d >= (x.from || 1) && (x.to == null || d <= x.to) && (!x.days || x.days.includes(dayDate(d).getDay()));
+function sections(day) {
+  const s = categories.map((c, ci) => ({...c, items: c.tasks.map((t, ti) => ({id:`day-${day}-cat-${ci}-task-${ti}`, t}))}));
+  if (day >= 21) s.push({...lastTen, items: lastTen.tasks.map((t, ti) => ({id:`day-${day}-last-${ti}`, t}))});
+  if (excused(day)) s.forEach((c, ci) => { c.items = c.items.filter((_, ti) => ci === 2 ? !(ti === 2 && ex.q) : ci === 4 ? (ti === 1 || ti === 2) : false) });
+  s.push({title:"مهامي", icon:"⭐", items: custom.filter(x => onDay(x, day)).map(x => ({id:`day-${day}-custom-${x.id}`, t:x.t, cid: x.to == null ? x.id : null}))});
+  return s;
+}
+const ids = d => sections(d).flatMap(s => s.items.map(i => i.id));
+const pct = d => { const a = ids(d); return a.length ? Math.round(a.filter(i => userData[i]).length / a.length * 100) : 0 };
+const parts = () => Object.values(quranData).filter(Boolean).length;
+function streak() {
+  let d = autoDay(), s = 0; if (!excused(d) && pct(d) < 80) d--;
+  while (d >= 1 && (excused(d) || pct(d) >= 80)) { if (!excused(d)) s++; d--; }
+  return s;
+}
+
+function renderTasks() {
+  $('tasks').innerHTML = sections(currentDay).filter(s => s.items.length).map(s => {
+    const n = s.items.filter(i => userData[i.id]).length;
+    return `<div class="card"><h2>${s.icon} ${s.title}<small>${ar(n)}/${ar(s.items.length)}</small></h2><div class="tasks">${s.items.map(i =>
+      `<div class="task ${userData[i.id] ? 'on' : ''}"><button class="tk" role="checkbox" aria-checked="${!!userData[i.id]}" onclick="toggleTask('${i.id}')"><i class="ck"></i><span>${esc(i.t)}</span></button>${i.cid ? `<button class="del" aria-label="حذف" onclick="delTask('${i.cid}')">✕</button>` : ''}</div>`).join('')}</div></div>`;
+  }).join('');
+}
+window.toggleTask = id => { userData[id] = !userData[id]; S('ramadan_tracker', userData); renderAll(); checkAch(); };
+window.delTask = id => {
+  const x = custom.find(t => t.id === id); if (!x) return;
+  const used = Object.keys(userData).some(k => userData[k] && k.endsWith('-custom-' + id) && +k.split('-')[1] < currentDay);
+  if (used && currentDay - 1 >= (x.from || 1)) x.to = currentDay - 1;
+  else { custom = custom.filter(t => t.id !== id); Object.keys(userData).forEach(k => { if (k.endsWith('-custom-' + id)) delete userData[k] }); S('ramadan_tracker', userData) }
+  S('ramadan_custom', custom); renderAll();
+};
+$('addT').onclick = () => { const v = $('newT').value.trim(); if (!v) return;
+  if (addType === 'habit') { habits.push({id: Date.now().toString(36), t: v}); S('ramadan_habits', habits); $('newT').value = ''; renderAll(); return } if (!newDays.size) { alert('اختاري يوم واحد على الأقل'); return } custom.push({id: Date.now().toString(36), t: v, from: currentDay, days: newDays.size === 7 ? null : [...newDays]}); S('ramadan_custom', custom); $('newT').value = ''; renderAll(); };
+$('newT').onkeydown = e => { if (e.key === 'Enter') $('addT').click() };
+
+function renderTop() {
+  const p = pct(currentDay);
+  $('pc').innerText = ar(p) + '%'; $('shade').setAttribute('cx', 70 - 135 * p / 100);
+  $('streakN').innerText = ar(streak()); $('dayChip').innerText = '📅 اليوم ' + ar(currentDay) + ' · ' + WD.find(w => w[0] === dayDate(currentDay).getDay())[1];
+}
+function renderStats() {
+  $('chart').innerHTML = Array.from({length: 30}, (_, i) => { const d = i + 1, p = pct(d);
+    return `<div class="bar ${p >= 80 ? 'on' : ''} ${d === currentDay ? 'cur' : ''}" style="height:${Math.max(p, 4)}%" title="يوم ${d}: ${p}%"></div>` }).join('');
+  const s = streak(), q = parts();
+  $('badges').innerHTML = ACH.map(a => `<span class="badge ${ach[a.id] ? '' : 'off'}">${a.i} ${a.t}</span>`).join('');
+  const all = [...categories.flatMap((c, ci) => c.tasks.map((t, ti) => ({t, f: d => `day-${d}-cat-${ci}-task-${ti}`}))), ...custom.map(x => ({t: x.t, f: d => `day-${d}-custom-${x.id}`}))];
+  const sc = all.map(x => ({t: x.t, n: Array.from({length: 30}, (_, i) => userData[x.f(i + 1)] ? 1 : 0).reduce((a, b) => a + b, 0)})).sort((a, b) => b.n - a.n);
+  $('bw').innerHTML = sc[0] && sc[0].n ? `<p>✅ أكتر عبادة ملتزمة بيها: <b>${esc(sc[0].t)}</b> (${ar(sc[0].n)} يوم)</p><p>🌱 محتاجة اهتمام: <b>${esc(sc.at(-1).t)}</b> (${ar(sc.at(-1).n)} يوم)</p>` : '<p class="sub">علّمي على مهام كام يوم وهتظهر إحصائياتك هنا.</p>';
+}
+function renderKhatma() {
+  const k = plan.k, pg = Math.ceil(604 * k / 30), tot = 604 * k, a = (currentDay - 1) * pg + 1, b = Math.min(currentDay * pg, tot), w = n => ((n - 1) % 604) + 1;
+  $('kSel').value = k;
+  $('kToday').innerHTML = (excused(currentDay) && ex.q) ? 'ورد القرآن متوقف النهارده 🤍' : a > tot ? 'خلصتي خطتك، تقبّل الله منك 🤍' : `ورد اليوم ${ar(currentDay)}: صفحة ${ar(w(a))} ← ${ar(w(b))}<small>${ar(pg)} صفحة في اليوم</small>`;
+  $('parts').innerHTML = Array.from({length: 30}, (_, i) => `<button class="part ${quranData['quran-part-' + (i + 1)] ? 'on' : ''}" onclick="togglePart(${i + 1})">جزء ${ar(i + 1)}</button>`).join('');
+  $('qp').innerText = ar(Math.round(parts() / 30 * 100)) + '%';
+}
+window.togglePart = i => { const k = 'quran-part-' + i; quranData[k] = !quranData[k]; S('quranParts', quranData); renderAll(); checkAch(); };
+$('kSel').onchange = e => { plan.k = +e.target.value; S('ramadan_plan', plan); renderKhatma(); };
+let newDays = new Set([0,1,2,3,4,5,6]);
+const sched = x => !x.days || x.days.length === 7 ? 'كل يوم' : x.days.length > 3 ? ar(x.days.length) + ' أيام في الأسبوع' : WD.filter(w => x.days.includes(w[0])).map(w => w[1]).join('، ');
+function renderCustomUI() {
+  $('typ').innerHTML = [['task', 'مهمة'], ['habit', '🚫 عادة بقلع عنها']].map(([k, l]) => `<button class="wdb ${addType === k ? 'on' : ''}" aria-pressed="${addType === k}" onclick="setType('${k}')">${l}</button>`).join('');
+  $('wdBox').hidden = addType === 'habit'; $('habNote').hidden = addType !== 'habit';
+  $('newT').placeholder = addType === 'habit' ? 'مثلاً: السوشيال ميديا بالليل' : 'مثلاً: سورة الكهف';
+  $('wd').innerHTML = WD.map(([n, l]) => `<button class="wdb ${newDays.has(n) ? 'on' : ''}" aria-pressed="${newDays.has(n)}" onclick="togWd(${n})">${l}</button>`).join('') + '<button class="lnk" onclick="allWd()">كل يوم</button>';
+  $('myList').innerHTML = custom.filter(x => x.to == null).map(x => `<div class="mine"><b style="flex:1">${esc(x.t)}</b><span class="sub" style="margin:0;font-size:.85rem">${sched(x)}${x.from > 1 ? ' · من يوم ' + ar(x.from) : ''}</span><button class="del" aria-label="حذف" onclick="delTask('${x.id}')">✕</button></div>`).join('')
+    + habits.map(x => `<div class="mine"><b style="flex:1">${esc(x.t)}</b><span class="sub" style="margin:0;font-size:.85rem">🚫 عادة</span><button class="del" aria-label="حذف" onclick="delHabit('${x.id}')">✕</button></div>`).join('');
+}
+window.togWd = n => { newDays.has(n) ? newDays.delete(n) : newDays.add(n); renderCustomUI() };
+window.allWd = () => { newDays = new Set([0,1,2,3,4,5,6]); renderCustomUI() };
+let habits = L('ramadan_habits', []), habLog = L('ramadan_hablog', {}), addType = 'task', slipMsg = null;
+const dw = s => s === 1 ? 'يوم' : s === 2 ? 'يومين' : s <= 10 ? ar(s) + ' أيام' : ar(s) + ' يوم';
+function hStreak(id) { const lg = habLog[id] || {}; let d = autoDay(), s = 0; if (lg[d] !== 1) d--; while (d >= 1 && lg[d] === 1) { s++; d--; } return s; }
+function renderHabits() {
+  $('habits').innerHTML = habits.length ? '<div class="card"><h2>🚫 عادة بقلع عنها<small>مش بتدخل في النسبة</small></h2>' + habits.map(x => {
+    const st = (habLog[x.id] || {})[currentDay], s = hStreak(x.id);
+    return `<div class="hab"><div class="row" style="justify-content:space-between"><b>${esc(x.t)}</b><span class="chip">${s ? '🌿 صامدة من ' + dw(s) : 'ابدئي النهارده'}</span></div>
+      <div class="row" style="margin-top:10px"><button class="btn ${st === 1 ? '' : 'o'}" aria-pressed="${st === 1}" onclick="habSet('${x.id}',1)">✓ صمدت</button><button class="btn o ${st === -1 ? 'slip' : ''}" aria-pressed="${st === -1}" onclick="habSet('${x.id}',-1)">زلّة</button></div>
+      ${slipMsg === x.id ? '<p class="sub" style="margin:10px 0 0">ابدئي من جديد، والتوبة تجبّ ما قبلها 🤍</p>' : ''}</div>`;
+  }).join('') + '</div>' : '';
+}
+window.habSet = (id, v) => { const lg = habLog[id] = habLog[id] || {}; if (lg[currentDay] === v) delete lg[currentDay]; else lg[currentDay] = v; slipMsg = lg[currentDay] === -1 ? id : null; S('ramadan_hablog', habLog); renderHabits(); };
+window.delHabit = id => { if (!confirm('تحذفي العادة وعدّادها؟')) return; habits = habits.filter(x => x.id !== id); delete habLog[id]; S('ramadan_habits', habits); S('ramadan_hablog', habLog); renderAll(); };
+window.setType = t => { addType = t; renderCustomUI(); };
+function renderCountdown() {
+  const on = inRamadan(); $('cd').hidden = on; if (on) return;
+  const t = new Date(), s = ramadanStart(); t.setHours(12, 0, 0, 0);
+  const n = Math.max(1, Math.round((s - t) / 864e5));
+  $('cdN').innerText = 'رمضان بعد ' + dw(n);
+  try { $('cdD').innerText = 'بإذن الله يبدأ حوالي ' + new Intl.DateTimeFormat('ar-EG-u-ca-gregory', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(s) + ' (حسب رؤية الهلال)' } catch (e) {}
+}
+
+/* الإنجازات والاحتفال */
+let ach = L('ramadan_ach', {}), achQ = [], demoN = 0;
+const maxPct = () => Math.max(0, ...Array.from({length: autoDay()}, (_, i) => pct(i + 1)));
+const lastNights = () => Array.from({length: 10}, (_, i) => 21 + i).filter(d => userData[`day-${d}-last-0`]).length;
+const ACH = [
+  {id: 'd1', i: '🌙', t: 'أول يوم كامل', d: 'بداية قوية! يوم بنسبة ١٠٠٪، وربنا يتقبّل.', f: () => maxPct() === 100},
+  {id: 's7', i: '🔥', t: '٧ أيام متواصلة', d: 'أسبوع كامل من الالتزام. تقبّل الله منك 🤍', f: () => streak() >= 7},
+  {id: 's10', i: '✨', t: '١٠ أيام متواصلة', d: 'ثلث الشهر في الجيب، والاستمرار أحلى من أي بداية.', f: () => streak() >= 10},
+  {id: 's15', i: '👑', t: '١٥ يوم متواصلة', d: 'نصف الشهر خلص! الاستمرار هو أصعب جزء 💪', f: () => streak() >= 15},
+  {id: 's20', i: '🌟', t: '٢٠ يوم متواصلة', d: 'فاضل عشرة بس. العشر الأواخر مستنية 💫', f: () => streak() >= 20},
+  {id: 's30', i: '🏆', t: 'الشهر كله', d: '٣٠ يوم متواصلة. تقبّل الله منا ومنك، وجعله خالصاً لوجهه 🤍', f: () => streak() >= 30, big: 1},
+  {id: 'p1', i: '📖', t: 'أول جزء', d: 'أول جزء في الختمة. كل صفحة بحسنة.', f: () => parts() >= 1},
+  {id: 'p10', i: '📚', t: '١٠ أجزاء', d: 'ثلث القرآن خلص. الله يفتح عليك.', f: () => parts() >= 10},
+  {id: 'p30', i: '🕌', t: 'ختمة كاملة', d: 'ختمة كاملة للقرآن! الله يتقبّل ويجعله شفيعاً.', f: () => parts() >= 30, big: 1},
+  {id: 'lt1', i: '💫', t: 'دخول العشر الأواخر', d: 'دخلنا أفضل ليالي الشهر. اللهم إنك عفو تحب العفو فاعف عنا.', f: () => Object.keys(userData).some(k => /^day-(2[1-9]|30)-/.test(k) && userData[k]), big: 1},
+  {id: 'lt5', i: '🌠', t: '٥ ليالي من القيام', d: 'قيام ٥ ليالي من العشر الأواخر. الله يبلّغنا ليلة القدر.', f: () => lastNights() >= 5, big: 1}
+];
+const LT = ['دخلنا العشر الأواخر، وفيها ليلة خير من ألف شهر 🌙', 'كل ليلة في العشر فرصة، وركعتين في الليل بيفرقوا', 'الدعاء في العشر له مكانة خاصة: اللهم إنك عفو تحب العفو فاعف عني', 'الليالي بتجري، والتعب هيروح والأجر هيفضل 💛', 'نص العشر عدّى، والباب لسه مفتوح', 'الاجتهاد في الليالي دي مبيضيعش أبداً', 'ليلة القدر بتتحرّى في الوتر من العشر، فالعشر كلها فرصة 🌟', 'فاضل أيام قليلة، والخواتيم هي الأهم', 'ربنا مبيضيعش أجر من أحسن عملاً', 'آخر يوم! تقبّل الله منا ومنكم، وأعاننا على الثبات بعد رمضان 🤍'];
+function renderLast() { $('lt').hidden = currentDay < 21; if (currentDay >= 21) $('ltT').innerText = LT[Math.min(9, currentDay - 21)] }
+
+function checkAch() {
+  if (!inRamadan()) return;
+  ACH.forEach(a => { if (!ach[a.id] && a.f()) { ach[a.id] = autoDay(); achQ.push(a) } });
+  S('ramadan_ach', ach); showNextAch();
+}
+function showNextAch() {
+  if (!achQ.length || !$('ach').hidden) return;
+  const a = achQ.shift();
+  $('achI').innerText = a.i; $('achT').innerText = a.t; $('achD').innerText = a.d;
+  $('achS').onclick = () => shareAch(a);
+  $('achC').onclick = () => { $('ach').hidden = true; showNextAch() };
+  $('ach').hidden = false; confetti(a.big ? 260 : 140);
+}
+function confetti(n) {
+  const c = $('cf'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight; x.clearRect(0, 0, c.width, c.height);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cols = ['#C5A059', '#D4A5A5', '#F3E9D2', '#ffffff', '#9B6BAE'];
+  const ps = Array.from({length: n}, () => ({x: Math.random() * c.width, y: -20 - Math.random() * c.height * .6, w: 6 + Math.random() * 7, h: 10 + Math.random() * 8, vx: -1 + Math.random() * 2, vy: 2 + Math.random() * 3.5, r: Math.random() * 6, vr: -.2 + Math.random() * .4, c: cols[Math.random() * cols.length | 0]}));
+  const t0 = performance.now();
+  (function f(t) {
+    x.clearRect(0, 0, c.width, c.height); let alive = 0;
+    ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.r += p.vr; if (p.y < c.height + 20) alive++; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore() });
+    if (alive && t - t0 < 6000 && !$('ach').hidden) requestAnimationFrame(f); else x.clearRect(0, 0, c.width, c.height);
+  })(t0);
+}
+function wrapT(x, s, w) { const out = []; let line = ''; s.split(' ').forEach(wd => { const t = line ? line + ' ' + wd : wd; if (x.measureText(t).width > w && line) { out.push(line); line = wd } else line = t }); if (line) out.push(line); return out }
+async function shareAch(a) {
+  await document.fonts.load('700 60px Tajawal');
+  const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 1080, 1920); g.addColorStop(0, '#2B0F33'); g.addColorStop(1, '#1A0D21'); x.fillStyle = g; x.fillRect(0, 0, 1080, 1920);
+  x.strokeStyle = '#C5A059'; x.lineWidth = 6; x.strokeRect(50, 50, 980, 1820); x.textAlign = 'center'; x.direction = 'rtl';
+  const t = (s, y, z, col, w = 700) => { x.fillStyle = col; x.font = `${w} ${z}px Tajawal, sans-serif`; x.fillText(s, 540, y) };
+  t('رمضان كريم 🌙', 300, 80, '#F3E9D2'); t(a.i, 760, 280, '#fff'); t('إنجاز جديد', 960, 56, '#D4A5A5', 500);
+  t(gm(a.t), 1090, 92, '#C5A059'); x.font = '500 54px Tajawal, sans-serif';
+  wrapT(x, gm(a.d), 860).forEach((l, i) => t(l, 1210 + i * 80, 54, '#F3E9D2', 500));
+  t(`اليوم ${ar(autoDay())} من رمضان`, 1640, 50, '#B8A5BD', 500); t('Royal Palette', 1760, 50, '#C5A059');
+  c.toBlob(async b => { const f = new File([b], 'ramadan-achievement.png', {type: 'image/png'});
+    if (navigator.canShare && navigator.canShare({files: [f]})) { try { await navigator.share({files: [f]}); return } catch (e) {} }
+    const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = f.name; l.click() });
+}
+$('achDemo').onclick = () => { achQ.push(ACH.find(a => a.id === (demoN++ % 2 ? 'lt1' : 's10'))); showNextAch() };
+
+let ex = L('ramadan_excuse', {on: false, q: false, p: []});
+const exOn = () => gender === 'f';
+const excused = d => exOn() && ex.p.some(p => d >= p.a && (p.b === null || d <= p.b));
+const exOpen = () => ex.p.find(p => p.b === null);
+const exSave = () => { S('ramadan_excuse', ex); renderAll() };
+function renderExcuse() {
+  const o = exOpen();
+  $('exBtn').hidden = !exOn(); $('exBtn').innerText = o ? '✅ انتهت أيام العذر' : '🌸'; $('exBtn').setAttribute('aria-label', o ? 'انتهت أيام العذر' : 'أيام العذر');
+  $('exB').hidden = !excused(currentDay); $('exCard').hidden = gender !== 'f';
+  $('exQ').innerText = ex.q ? '✅ الورد القرآني مخفي' : 'إخفاء الورد القرآني كمان';
+  $('exList').innerHTML = ex.p.map((p, i) => `<div class="mine"><b style="flex:1">من يوم ${ar(p.a)} ${p.b === null ? 'ولسه مستمرة' : 'لحد يوم ' + ar(p.b)}</b><button class="del" aria-label="حذف" onclick="exDel(${i})">✕</button></div>`).join('');
+}
+window.exDel = i => { ex.p.splice(i, 1); exSave() };
+$('exQ').onclick = () => { ex.q = !ex.q; exSave() };
+$('exBtn').onclick = () => { const o = exOpen(); if (o) { if (currentDay <= o.a) ex.p = ex.p.filter(p => p !== o); else o.b = currentDay - 1 } else ex.p.push({a: currentDay, b: null}); exSave() };
+function renderAll() { renderExcuse(); renderLast(); renderBackup(); renderCountdown(); renderTasks(); renderHabits(); renderTop(); renderStats(); renderKhatma(); renderCustomUI(); }
+
+/* المواقيت */
+const PN = {Fajr:'الفجر', Dhuhr:'الظهر', Asr:'العصر', Maghrib:'المغرب', Isha:'العشاء'};
+async function loadTimes() {
+  const key = 'times_' + city + new Date().toDateString(); timings = L(key, null);
+  if (!timings) { try { const r = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Egypt&method=5`); timings = (await r.json()).data.timings; S(key, timings) }
+    catch (e) { $('next').innerText = 'المواقيت مش متاحة دلوقتي، اتأكدي من النت'; return } }
+  $('times').innerHTML = Object.keys(PN).map(k => `<div><b>${PN[k]}</b><br>${ar(timings[k].slice(0, 5))}</div>`).join(''); tick();
+}
+function tick() {
+  if (!timings) return; const now = new Date(); let n = null;
+  for (const k of Object.keys(PN)) { const [h, m] = timings[k].split(':'), d = new Date(); d.setHours(+h, +m, 0, 0); if (d > now) { n = {k, d}; break } }
+  if (!n) { const [h, m] = timings.Fajr.split(':'), d = new Date(); d.setDate(d.getDate() + 1); d.setHours(+h, +m, 0, 0); n = {k: 'Fajr', d} }
+  const s = Math.floor((n.d - now) / 1000), p = x => ar(String(x).padStart(2, '0'));
+  $('next').innerText = `باقي على ${n.k === 'Maghrib' ? 'الإفطار' : PN[n.k]}: ${p(Math.floor(s / 3600))}:${p(Math.floor(s % 3600 / 60))}:${p(s % 60)}`;
+}
+$('city').innerHTML = Object.entries(CITIES).map(([a, e]) => `<option value="${e}" ${e === city ? 'selected' : ''}>${a}</option>`).join('');
+$('city').onchange = e => { city = e.target.value; S('ramadan_city', city); loadTimes() };
+setInterval(tick, 1000);
+
+/* المشاركة */
+$('share').onclick = async () => {
+  await document.fonts.load('700 60px Tajawal');
+  const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; const x = c.getContext('2d');
+  x.fillStyle = '#1A0D21'; x.fillRect(0, 0, 1080, 1920); x.strokeStyle = '#C5A059'; x.lineWidth = 6; x.strokeRect(50, 50, 980, 1820);
+  x.textAlign = 'center'; x.direction = 'rtl';
+  const t = (s, y, z, col, w = 700) => { x.fillStyle = col; x.font = `${w} ${z}px Tajawal, sans-serif`; x.fillText(s, 540, y) }, p = pct(currentDay);
+  t('رمضان كريم 🌙', 330, 90, '#F3E9D2'); t(`اليوم ${ar(currentDay)}`, 480, 64, '#D4A5A5');
+  x.save(); x.beginPath(); x.arc(540, 880, 230, 0, 7); x.clip(); x.fillStyle = '#37203F'; x.fillRect(300, 640, 480, 480);
+  x.fillStyle = '#C5A059'; x.fillRect(300, 640, 480, 480); x.fillStyle = '#37203F'; x.beginPath(); x.arc(540 - 460 * p / 100, 880, 230, 0, 7); x.fill(); x.restore();
+  x.beginPath(); x.arc(540, 880, 230, 0, 7); x.strokeStyle = '#C5A059'; x.lineWidth = 6; x.stroke();
+  t(ar(p) + '%', 1260, 120, '#fff'); t('إنجاز اليوم', 1350, 52, '#B8A5BD', 500);
+  t(`🔥 ${ar(streak())} أيام متتالية`, 1470, 62, '#C5A059'); t(`📖 ${ar(parts())} من ٣٠ جزء`, 1560, 54, '#F3E9D2', 500); t('Royal Palette', 1740, 50, '#C5A059');
+  c.toBlob(async b => { const f = new File([b], 'ramadan.png', {type: 'image/png'});
+    if (navigator.canShare && navigator.canShare({files: [f]})) { try { await navigator.share({files: [f]}); return } catch (e) {} }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = f.name; a.click() });
+};
+
+/* نسخة احتياطية كاملة */
+const BK = ['ramadan_user', 'ramadan_uid', 'ramadan_tracker', 'quranParts', 'ramadan_custom', 'ramadan_plan', 'ramadan_city', 'ramadan_hoff', 'ramadan_theme', 'ramadan_habits', 'ramadan_hablog', 'ramadan_first', 'ramadan_last', 'ramadan_season', 'ramadan_live', 'ramadan_firstuse', 'ramadan_gender', 'ramadan_fs', 'ramadan_ach', 'ramadan_excuse'];
+function doExport() {
+  localStorage.setItem('ramadan_backup', Date.now());
+  const keys = {}; BK.forEach(k => { const v = localStorage.getItem(k); if (v !== null) keys[k] = v });
+  const b = new Blob([JSON.stringify({app: 'ramadan-tracker', v: 2, keys})], {type: 'application/json'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(b); a.download = 'ramadan-backup.json'; a.click(); renderBackup();
+}
+async function restoreFile(f) {
+  try {
+    const d = JSON.parse(await f.text());
+    if (d.app !== 'ramadan-tracker' || !d.keys) throw 0;
+    BK.forEach(k => { if (typeof d.keys[k] === 'string') localStorage.setItem(k, d.keys[k]) });
+    localStorage.setItem('ramadan_backup', Date.now());
+    location.reload();
+  } catch (e) { alert('الملف مش صالح أو مش نسخة من التطبيق ده') }
+}
+$('wipe').onclick = async () => {
+  if (!confirm('هتمسحي كل بياناتك من الجهاز: التقدم والاسم والإعدادات. صدّري نسخة الأول لو محتاجاها. تكمّلي؟')) return;
+  Object.keys(localStorage).filter(k => /^(ramadan_|quranParts|duaDate|times_)/.test(k)).forEach(k => localStorage.removeItem(k));
+  sessionStorage.clear();
+  try { const base = new URL('./', location.href).href; (await navigator.serviceWorker.getRegistrations()).filter(r => r.scope === base).forEach(r => r.unregister()); (await caches.keys()).filter(k => k.startsWith('ramadan-')).forEach(k => caches.delete(k)) } catch (e) {}
+  location.reload();
+};
+$('exp').onclick = doExport;
+$('imp').onchange = e => { if (e.target.files[0] && confirm('الاستيراد هيبدّل بياناتك الحالية. تكمّلي؟')) restoreFile(e.target.files[0]) };
+$('imp2').onchange = e => { if (e.target.files[0]) restoreFile(e.target.files[0]) };
+function needBackup() {
+  const has = Object.values(userData).some(Boolean) || Object.values(quranData).some(Boolean) || custom.length || habits.length;
+  const base = +localStorage.getItem('ramadan_backup') || +localStorage.getItem('ramadan_firstuse') || Date.now();
+  return !!has && Date.now() - base > 7 * 864e5 && Date.now() > (+localStorage.getItem('ramadan_snooze') || 0);
+}
+function renderBackup() { $('bk').hidden = !needBackup() }
+$('bkNow').onclick = doExport;
+$('bkLater').onclick = () => { localStorage.setItem('ramadan_snooze', Date.now() + 2 * 864e5); renderBackup() };
+
+/* المزامنة: الاسم + نسبة اليوم اللي فات بس، مرة واحدة لكل يوم */
+const post = o => fetch(GOOGLE_SCRIPT_URL, {method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify(o)});
+function uid() { let u = localStorage.getItem('ramadan_uid'); if (!u) { u = Math.random().toString(36).slice(2, 10) + Date.now().toString(36); localStorage.setItem('ramadan_uid', u) } return u }
+let reporting = false;
+async function reportDays() {
+  const u = L('ramadan_user', null); if (!u || !navigator.onLine || reporting) return;
+  const live = inRamadan(), today = autoDay();
+  let first = L('ramadan_first', 0);
+  if (!first) { if (!live) return; first = today; S('ramadan_first', first) }
+  const last = L('ramadan_last', first - 1);
+  const upto = live ? today - 1 : (last < 30 ? 29 + (pct(30) > 0 ? 1 : 0) : 0);
+  reporting = true;
+  try { for (let d = last + 1; d <= upto; d++) { await post({type: 'day', uid: uid(), name: u.name, day: d, progress: pct(d)}); S('ramadan_last', d) } } catch (e) {}
+  reporting = false;
+}
+addEventListener('online', reportDays);
+
+/* واجهة */
+function view(v) { document.querySelectorAll('.view').forEach(s => s.hidden = s.id !== 'v-' + v); document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-current', b.dataset.v === v)); scrollTo(0, 0) }
+document.querySelectorAll('.nav button').forEach(b => b.onclick = () => view(b.dataset.v));
+$('theme').onclick = () => { const l = document.body.dataset.t !== 'light'; document.body.dataset.t = l ? 'light' : ''; S('ramadan_theme', l) };
+if (L('ramadan_theme', false)) document.body.dataset.t = 'light';
+for (let i = 1; i <= 30; i++) $('day').add(new Option('اليوم ' + ar(i), i));
+$('day').onchange = e => { currentDay = parseInt(e.target.value, 10); renderAll() };
+$('todayBtn').onclick = () => { currentDay = autoDay(); $('day').value = currentDay; renderAll() };
+
+function renderDates() {
+  const n = new Date(), h = new Date(); h.setDate(h.getDate() + hOff);
+  try { $('hij').innerText = new Intl.DateTimeFormat('ar-EG-u-ca-islamic-umalqura', {day:'numeric', month:'long', year:'numeric'}).format(h);
+        $('greg').innerText = new Intl.DateTimeFormat('ar-EG-u-ca-gregory', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(n); } catch (e) {}
+  $('hprev').innerText = 'التاريخ الهجري عندك دلوقتي: ' + $('hij').innerText;
+}
+$('hoff').onchange = e => { hOff = +e.target.value; S('ramadan_hoff', hOff); rs = null; currentDay = autoDay(); $('day').value = currentDay; renderDates(); renderAll(); };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('app').hidden) { renderDates(); reportDays() } });
+function start() {
+  if (inRamadan() && localStorage.getItem('ramadan_live') !== '1448') {
+    userData = {}; quranData = {}; habLog = {}; ach = {}; localStorage.removeItem('ramadan_ach'); ex.p = []; S('ramadan_excuse', ex); S('ramadan_tracker', userData); S('quranParts', quranData); S('ramadan_hablog', habLog); localStorage.setItem('ramadan_live', '1448');
+  }
+  $('hoff').value = hOff; if (!localStorage.getItem('ramadan_gender')) $('gq').hidden = false; if (!localStorage.getItem('ramadan_firstuse')) localStorage.setItem('ramadan_firstuse', Date.now());
+  $('reg').hidden = true; $('app').hidden = false;
+  currentDay = autoDay(); $('day').value = currentDay; $('quote').innerText = quotes[currentDay % quotes.length];
+  view('today'); renderDates(); renderAll(); loadTimes(); reportDays();
+  const today = new Date().toDateString();
+  if (localStorage.getItem('duaDate') !== today) { $('duaT').innerText = duas[(currentDay - 1) % duas.length]; $('dua').hidden = false; localStorage.setItem('duaDate', today) }
+}
+$('regForm').onsubmit = e => { e.preventDefault(); if (!regG) { alert('اختيار طريقة المخاطبة مطلوب'); return } setGender(regG); const u = {name: $('uName').value.trim(), email: $('uMail').value.trim()}; S('ramadan_user', u); post({type: 'register', uid: uid(), name: u.name, email: u.email}).catch(() => {}); start() };
+if (L('ramadan_user', null)) start();
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  // لما النسخة الجديدة تستلم، حدّثي الصفحة مرة واحدة
+  let had = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had && !sessionStorage.getItem('swr')) { sessionStorage.setItem('swr', 1); location.reload() } had = true });
+}
+</script>
+</body>
+</html>
